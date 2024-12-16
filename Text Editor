@@ -1,0 +1,122 @@
+package GUI;
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.text.*;
+
+public class Procesador_Textos {
+    public static void main(String[] args) {
+        ProcesadorGui objFrame = new ProcesadorGui();
+        objFrame.setVisible(true);
+    }
+}
+
+class ProcesadorGui extends JFrame {
+
+    ProcesadorPanel objPanel = new ProcesadorPanel();
+
+    public ProcesadorGui() {
+        super("Procesador de Textos"); // Set window title
+
+        JMenuBar barra = new JMenuBar();
+        barra.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+        // Font size menu
+        JMenu tamaño = new JMenu("Tamaño");
+        JMenuItem tam9 = new JMenuItem("9");
+        JMenuItem tam12 = new JMenuItem("12");
+        JMenuItem tam15 = new JMenuItem("15");
+        tamaño.add(tam9);
+        tamaño.add(tam12);
+        tamaño.add(tam15);
+
+        // Font type menu
+        JMenu fuente = new JMenu("Fuente");
+        JMenuItem Arial = new JMenuItem("Arial");
+        JMenuItem Courier = new JMenuItem("Courier");
+        JMenuItem Verdana = new JMenuItem("Verdana");
+        fuente.add(Arial);
+        fuente.add(Courier);
+        fuente.add(Verdana);
+
+        // Font style menu
+        JMenu estilo = new JMenu("Estilo");
+        JMenuItem negrita = new JMenuItem("Negrita");
+        JMenuItem cursiva = new JMenuItem("Cursiva");
+        JMenuItem normal = new JMenuItem("Normal");
+        estilo.add(negrita);
+        estilo.add(cursiva);
+        estilo.add(normal);
+
+        // Add menus to the menu bar
+        barra.add(tamaño);
+        barra.add(fuente);
+        barra.add(estilo);
+        this.add(barra, BorderLayout.NORTH);
+
+        // Add the custom panel
+        this.add(objPanel, BorderLayout.CENTER);
+
+        // Frame settings
+        this.setSize(600, 400);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLocationRelativeTo(null);
+
+        // Font settings (default font)
+        Font defaultFont = new Font("Arial", Font.PLAIN, 12);
+        objPanel.textArea.setFont(defaultFont);
+
+        // Event Listeners
+        tam9.addActionListener(e -> objPanel.changeFontSize(9));
+        tam12.addActionListener(e -> objPanel.changeFontSize(12));
+        tam15.addActionListener(e -> objPanel.changeFontSize(15));
+
+        Arial.addActionListener(e -> objPanel.changeFontFamily("Arial"));
+        Courier.addActionListener(e -> objPanel.changeFontFamily("Courier"));
+        Verdana.addActionListener(e -> objPanel.changeFontFamily("Verdana"));
+
+        negrita.addActionListener(e -> objPanel.changeFontStyle(Font.BOLD));
+        cursiva.addActionListener(e -> objPanel.changeFontStyle(Font.ITALIC));
+        normal.addActionListener(e -> objPanel.changeFontStyle(Font.PLAIN));
+    }
+}
+
+class ProcesadorPanel extends JPanel {
+    JTextPane textArea;
+
+    public ProcesadorPanel() {
+        this.setLayout(new BorderLayout());
+        this.setBackground(Color.LIGHT_GRAY);
+
+        // Use JTextPane for styled text
+        textArea = new JTextPane();
+        textArea.setBackground(Color.WHITE);
+        this.add(new JScrollPane(textArea), BorderLayout.CENTER);
+    }
+
+    // Change font size for selected text
+    public void changeFontSize(int size) {
+        Font currentFont = textArea.getFont();
+        MutableAttributeSet attributes = textArea.getInputAttributes();
+        StyleConstants.setFontSize(attributes, size);
+        textArea.setCharacterAttributes(attributes, true);
+    }
+
+    // Change font family for selected text
+    public void changeFontFamily(String family) {
+        Font currentFont = textArea.getFont();
+        MutableAttributeSet attributes = textArea.getInputAttributes();
+        StyleConstants.setFontFamily(attributes, family);
+        textArea.setCharacterAttributes(attributes, true);
+    }
+
+    // Change font style for selected text
+    public void changeFontStyle(int style) {
+        Font currentFont = textArea.getFont();
+        MutableAttributeSet attributes = textArea.getInputAttributes();
+        StyleConstants.setBold(attributes, style == Font.BOLD);
+        StyleConstants.setItalic(attributes, style == Font.ITALIC);
+        textArea.setCharacterAttributes(attributes, true);
+    }
+}
